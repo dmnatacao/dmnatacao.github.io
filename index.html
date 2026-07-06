@@ -998,9 +998,9 @@ function viewAtletaDetail(slug){
         <div class="profile-tags">
           <span class="pill">${fmtCat(meta.categoria)}</span>
           <span class="pill">${meta.sexo==='F'?'Feminino':'Masculino'}</span>
-          ${meta.idade>=18 ? `<span class="pill">${meta.idade} anos</span>` : ''}
+          ${meta.idade>=18 ? `${meta.idade>=18 ? `<span class="pill">${meta.idade} anos</span>` : ''}` : ''}
           <span class="pill">Prof. Diego Meza</span>
-          ${meta.idade>=18 ? `<span class="pill">Nasc. ${meta.nasc}</span>` : ''}
+          ${meta.idade>=18 ? `${meta.idade>=18 ? `<span class="pill">Nasc. ${meta.nasc}</span>` : ''}` : ''}
         </div>
       </div>
     </div>
@@ -1461,4 +1461,77 @@ function viewGaleria(){
     igCard('https://www.instagram.com/diegoemeza1/', window.__IMG_BREAST__, 'diegoemeza1', 'Diego Meza', '4.634 seguidores · 137 publicações'),
   ];
   const photoSlide = (photo, alt, caption) => `
-    <div class="phot
+    <div class="photo-slide"><img src="${photo}" alt="${alt}"><span>${caption}</span></div>`;
+  const photoSlides = [
+    photoSlide(window.__IMG_CLAP__, 'Pré-prova', 'Concentração antes da prova'),
+    photoSlide(window.__IMG_BREAST__, 'Nado peito', 'Técnica de nado peito'),
+    photoSlide(window.__IMG_MEDAL__, 'Diego Meza medalhista', '1º lugar geral — 100m Livre'),
+  ];
+  return `
+  <div class="wrap">
+    <div class="pagehead"><h1>Galeria</h1><p>Momentos da equipe DM Natação dentro e fora da piscina.</p></div>
+
+    <div class="photo-carousel">
+      <div class="photo-track">${photoSlides.join('')}${photoSlides.join('')}</div>
+    </div>
+
+    <div class="section-title"><span class="bar"></span>Siga no Instagram</div>
+    <div class="ig-static-row">${igCards.join('')}</div>
+    <footer>DM Natação — Palmas/TO</footer>
+  </div>`;
+}
+
+/* ============ VIEW: CONTATO ============ */
+route('/contato', viewContato);
+function viewContato(){
+  return `
+  <div class="wrap">
+    <div class="pagehead"><h1>Contato</h1><p>Fale com a equipe DM Natação.</p></div>
+    <div class="gridcols2">
+      <div class="contact-box">
+        <div class="contact-box-text">
+          <h3>Professor Diego Meza</h3>
+          <p>🥇 Campeão Nacional 🇻🇪 · Campeão Norte-Nordeste 🇧🇷 (100m Livre) · 🏆 Recordista estadual (Tocantins) · Nº10 do Brasil — 200m Costas Sênior</p>
+          <p style="margin-top:8px;">🛟 Guarda-vidas · Aulas de natação em Palmas-TO, do iniciante ao avançado.</p>
+        </div>
+        <div class="contact-btns">
+          <a class="cbtn wa" href="https://wa.me/5563985114884" target="_blank" rel="noopener">💬 Falar no WhatsApp</a>
+          <a class="cbtn ig" href="https://www.instagram.com/diegoemeza1/" target="_blank" rel="noopener">${igIcon()} @diegoemeza1</a>
+        </div>
+      </div>
+      <div class="schedule-wrap" id="schedule-contato"></div>
+    </div>
+    <footer>DM Natação — Palmas/TO</footer>
+  </div>`;
+}
+
+</script>
+<script>
+/* Theme toggle */
+(function(){
+  const root = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+  function applyIcon(){ btn.textContent = root.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'; }
+  btn.addEventListener('click', function(){
+    const cur = root.getAttribute('data-theme');
+    root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    applyIcon();
+    if(location.hash.slice(1).startsWith('/atleta/') || currentHash()==='/'){
+      /* re-render to refresh chart colors */
+      navigate();
+    }
+  });
+  applyIcon();
+})();
+/* Mobile nav burger */
+(function(){
+  const burger = document.getElementById('nav-burger');
+  const links = document.getElementById('navlinks');
+  burger.addEventListener('click', function(){ links.classList.toggle('open'); });
+  links.addEventListener('click', function(e){ if(e.target.classList.contains('navlink')) links.classList.remove('open'); });
+})();
+/* Boot */
+navigate();
+</script>
+</body>
+</html>
