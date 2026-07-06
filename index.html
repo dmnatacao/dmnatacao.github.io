@@ -247,9 +247,17 @@ html[data-theme="dark"] .kpi .n{color:var(--turq);}
 .comp-meta{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);}
 
 /* ---------------- RECORDS ---------------- */
-.record-card{padding:20px;position:relative;overflow:hidden;}
-.record-card .rc-badge{position:absolute;top:14px;right:14px;background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-brd);
-  font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:20px;letter-spacing:.3px;}
+.record-card{padding:20px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#FFFDF7 0%,#FFF3D2 55%,#FBE6A6 100%);
+  border:1px solid var(--gold-brd);
+  box-shadow:0 6px 18px rgba(200,155,28,.16), var(--shadow);}
+.record-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--gold),#F5DD8E,var(--gold));}
+html[data-theme="dark"] .record-card{
+  background:linear-gradient(135deg,#221b09 0%,#2c2309 55%,#392c0b 100%);
+  box-shadow:0 6px 18px rgba(0,0,0,.35);}
+.record-card .rc-badge{position:absolute;top:14px;right:14px;background:var(--gold);color:#3A2A00;border:1px solid rgba(0,0,0,.08);
+  font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:20px;letter-spacing:.3px;box-shadow:0 2px 6px rgba(0,0,0,.14);}
 .record-card h3{margin:0 0 6px;font-size:15px;}
 .record-card .rc-time{font-size:26px;font-weight:800;font-family:'Manrope',sans-serif;color:var(--navy);margin-bottom:8px;}
 html[data-theme="dark"] .record-card .rc-time{color:var(--turq);}
@@ -276,6 +284,48 @@ html[data-theme="dark"] th.sortable-th.sort-desc::after{color:var(--turq);}
 .sortctl select{padding:6px 10px;border-radius:8px;border:1px solid var(--gray-brd);background:var(--white);color:var(--text);font-size:13px;}
 .sortctl button{padding:6px 10px;border-radius:8px;border:1px solid var(--gray-brd);background:var(--white);color:var(--text);font-size:13px;}
 
+
+/* ---------------- CORPO TECNICO (unified staff card) ---------------- */
+.staffcard-duo{padding:0;overflow:hidden;}
+.staffcard-duo .staffduo-photo{width:100%;height:240px;object-fit:cover;object-position:center 22%;display:block;}
+.staffduo-body{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:20px 22px;}
+.staffduo-col .role{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--turq-dark);font-weight:800;}
+.staffduo-col h3{margin:4px 0 10px;font-size:18px;}
+.staffduo-col ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;}
+.staffduo-col li{font-size:13.5px;color:var(--muted);}
+.staffduo-col li b{color:var(--text);font-weight:600;}
+@media(max-width:720px){.staffduo-body{grid-template-columns:1fr;}}
+
+/* ---------------- DESTAQUES DM (style leaderboards) ---------------- */
+.style-hl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
+.stylecard h3{margin:0 0 10px;font-size:14.5px;}
+.style-lb-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-mid);font-size:13px;}
+.style-lb-row:last-child{border-bottom:none;}
+.style-lb-name{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.style-lb-time{font-weight:700;font-family:'Manrope',sans-serif;font-size:12.5px;color:var(--muted);}
+
+/* ---------------- INSTAGRAM CAROUSEL ---------------- */
+.ig-carousel{overflow:hidden;position:relative;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);}
+.ig-track{display:flex;gap:16px;width:max-content;animation:ig-scroll 18s linear infinite;}
+.ig-carousel:hover .ig-track{animation-play-state:paused;}
+.ig-card{display:flex;align-items:center;gap:14px;width:320px;flex:0 0 auto;background:var(--white);
+  border:1px solid var(--gray-brd);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);
+  transition:transform .15s,box-shadow .15s,border-color .15s;}
+.ig-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--turq);}
+.ig-card-photo{width:60px;height:60px;border-radius:50%;object-fit:cover;flex:0 0 auto;border:2px solid var(--turq-tint);}
+.ig-card-body{min-width:0;}
+.ig-card-head{display:flex;align-items:center;gap:6px;font-size:13.5px;margin-bottom:2px;color:var(--text);}
+.ig-card-head .ig-svg{color:#C1387D;flex:0 0 auto;}
+.ig-card-body p{margin:0 0 4px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ig-card-cta{font-size:12px;font-weight:700;color:var(--turq-dark);}
+@keyframes ig-scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@media(max-width:720px){.ig-card{width:270px;}}
+
+/* ---------------- CONTACT (extra) ---------------- */
+.contact-box-text{max-width:560px;}
+.contact-btns .ig-svg{vertical-align:-2px;}
 </style>
 </head>
 <body>
@@ -452,6 +502,7 @@ function navigate(){
   if(parts[0] === 'atleta' && parts[1]){
     app.innerHTML = viewAtletaDetail(parts[1]);
     initAtletaDetailCharts(parts[1]);
+    initAtletaHistSort(parts[1]);
     return;
   }
   const key = '/'+(parts[0]||'');
@@ -469,6 +520,31 @@ window.addEventListener('hashchange', navigate);
 /* ============ SHARED SNIPPETS ============ */
 function chip(text, cls){ return `<span class="mini-chip ${cls||''}">${text}</span>`; }
 function medalRow(m){ return `🥇 <b>${m.ouro}</b> &nbsp; 🥈 <b>${m.prata}</b> &nbsp; 🥉 <b>${m.bronze}</b>`; }
+function igIcon(){ return '<svg class="ig-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:-3px"><rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg>'; }
+function styleHighlights(){
+  const ESTILOS = ['Livre','Costas','Peito','Borboleta','Medley'];
+  return ESTILOS.map(estilo=>{
+    const rows = DATA.resultados.filter(r=>r.estilo===estilo);
+    if(!rows.length) return null;
+    const byDist = {};
+    rows.forEach(r=>{ (byDist[r.distancia] = byDist[r.distancia] || new Set()).add(r.atleta); });
+    let bestDist = null, bestCount = -1;
+    Object.keys(byDist).map(Number).sort((a,b)=>a-b).forEach(d=>{
+      const c = byDist[d].size;
+      if(c > bestCount){ bestCount = c; bestDist = d; }
+    });
+    const evRows = rows.filter(r=>r.distancia===bestDist);
+    const byAthlete = {};
+    evRows.forEach(r=>{
+      const sec = timeToSec(r.tempo);
+      if(!byAthlete[r.atleta] || sec < byAthlete[r.atleta].sec){ byAthlete[r.atleta] = Object.assign({}, r, {sec}); }
+    });
+    let ranked = Object.values(byAthlete).sort((a,b)=>a.sec-b.sec);
+    const n = ranked.length >= 5 ? 5 : Math.min(ranked.length, 3);
+    ranked = ranked.slice(0, n);
+    return { estilo, distancia: bestDist, ranked };
+  }).filter(Boolean);
+}
 function placeCell(place){
   const n = parseInt(place,10);
   const cls = n===1?'p1':n===2?'p2':n===3?'p3':'';
@@ -479,12 +555,7 @@ function placeCell(place){
 route('/', viewHome);
 function viewHome(){
   const stats = teamStats();
-  const recentRows = [...DATA.resultados].sort((a,b)=>{
-    const [d1,m1,y1]=a.data.split('/'); const [d2,m2,y2]=b.data.split('/');
-    return new Date(`${y2}-${m2}-${d2}`) - new Date(`${y1}-${m1}-${d1}`);
-  }).slice(0,6);
-  const topRanking = teamRanking({}).slice(0,0); // placeholder not used generically
-  const goldRows = DATA.resultados.filter(r=>r.colocacao==='1º').slice(0,5);
+  const destaquesEstilo = styleHighlights();
 
   return `
   <div class="hero-banner">
@@ -528,55 +599,49 @@ function viewHome(){
     </div>
 
     <div class="section-title"><span class="bar"></span>Corpo técnico</div>
-    <div class="staffgrid">
-      <div class="staffcard">
-        <div class="role">Professor · Fundador</div>
-        <h3>Diego Meza</h3>
-        <ul>
-          <li>🥇 <b>Campeão Nacional</b> 🇻🇪</li>
-          <li>🥇 <b>Campeão Norte-Nordeste</b> 🇧🇷 (100m Livre)</li>
-          <li>🏆 <b>Recordista estadual</b> — Tocantins</li>
-          <li>🏊 <b>Nº10 do Brasil</b> — 200m Costas Sênior</li>
-          <li>🛟 Guarda-vidas</li>
-        </ul>
-      </div>
-      <div class="staffcard">
-        <div class="role">Professor</div>
-        <h3>Daniel Meza</h3>
-        <ul>
-          <li>Irmão do Diego e também professor de natação</li>
-          <li>Apoia toda a equipe nos treinos e competições</li>
-          <li>🥉 3º lugar geral — Campeonato Tocantinense de Águas Abertas (por equipes)</li>
-        </ul>
-        <img class="podium-photo" src="${window.__IMG_PODIUM__}" alt="Diego e Daniel Meza no pódio">
+    <div class="staffcard staffcard-duo">
+      <img class="staffduo-photo" src="${window.__IMG_PODIUM__}" alt="Diego e Daniel Meza no pódio">
+      <div class="staffduo-body">
+        <div class="staffduo-col">
+          <div class="role">Professor · Fundador</div>
+          <h3>Diego Meza</h3>
+          <ul>
+            <li>🥇 <b>Campeão Nacional</b> 🇻🇪</li>
+            <li>🥇 <b>Campeão Norte-Nordeste</b> 🇧🇷 (100m Livre)</li>
+            <li>🏆 <b>Recordista estadual</b> — Tocantins</li>
+            <li>🏊 <b>Nº10 do Brasil</b> — 200m Costas Sênior</li>
+            <li>🛟 Guarda-vidas</li>
+          </ul>
+        </div>
+        <div class="staffduo-col">
+          <div class="role">Professor</div>
+          <h3>Daniel Meza</h3>
+          <ul>
+            <li>Irmão do Diego e também professor de natação</li>
+            <li>Apoia toda a equipe nos treinos e competições</li>
+            <li>🥉 <b>3º lugar geral</b> — Campeonato Tocantinense de Águas Abertas (por equipes)</li>
+          </ul>
+        </div>
       </div>
     </div>
 
     <div class="section-title"><span class="bar"></span>Próximas competições</div>
     ${proximasCompeticoesHTML()}
 
-    <div class="section-title"><span class="bar"></span>Últimos resultados</div>
-    <div class="tablewrap">
-      <div style="overflow-x:auto;">
-        <table>
-          <thead><tr><th>Atleta</th><th>Prova</th><th>Tempo</th><th>Colocação</th><th>Data</th></tr></thead>
-          <tbody>${recentRows.map(r=>`<tr class="${r.recorde?'record':''}">
-            <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${r.atleta}</a></td>
-            <td>${r.distancia}m ${r.estilo}</td><td><b>${r.tempo}</b>${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
-            <td>${placeCell(r.colocacao)}</td><td>${r.data}</td></tr>`).join('')}</tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="section-title"><span class="bar"></span>Destaques (ouro) recentes</div>
-    <div class="cards">
-      ${goldRows.map(r=>`
-        <div class="acard" onclick="location.hash='#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}'">
-          <div class="acard-top">
-            <div class="avatar"><span>${initials(r.atleta)}</span></div>
-            <div><div class="acard-name">${r.atleta}</div><div class="acard-meta">${fmtCat(r.categoria)}</div></div>
+    <div class="section-title"><span class="bar"></span>Destaques DM</div>
+    <div class="section-sub">Melhores tempos da equipe em cada estilo (prova com mais atletas competindo).</div>
+    <div class="style-hl-grid">
+      ${destaquesEstilo.map(d=>`
+        <div class="chartbox stylecard">
+          <h3>${d.estilo} · ${d.distancia}m</h3>
+          <div class="style-lb">
+            ${d.ranked.map((r,i)=>`
+              <div class="style-lb-row">
+                ${placeCell(i+1)}
+                <a class="rowlink style-lb-name" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${r.atleta}</a>
+                <span class="style-lb-time">${r.tempo}</span>
+              </div>`).join('')}
           </div>
-          <div class="eventchips"><span class="eventchip ${r.recorde?'rec':''}">🥇 ${r.distancia}m ${r.estilo} · ${r.tempo}</span></div>
         </div>`).join('')}
     </div>
 
@@ -768,7 +833,11 @@ function viewAtletas(){
       </div>
       <div style="overflow-x:auto;max-height:560px;overflow-y:auto;">
         <table>
-          <thead><tr><th>Atleta</th><th>Prova</th><th>Categoria</th><th>Tempo</th><th>Colocação</th><th>Data</th><th>Competição</th><th>IT</th></tr></thead>
+          <thead id="atl-thead"><tr>
+            <th data-key="atleta">Atleta</th><th data-key="prova">Prova</th><th data-key="categoria">Categoria</th>
+            <th data-key="tempo" data-dir="asc">Tempo</th><th data-key="colocacao" data-dir="asc">Colocação</th>
+            <th data-key="data" data-dir="desc">Data</th><th data-key="competicao">Competição</th><th data-key="it" data-dir="desc">IT</th>
+          </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
       </div>
@@ -780,6 +849,20 @@ function viewAtletas(){
 let activeAthlete = null;
 function initAtletasView(){
   activeAthlete = null;
+  const atlSortState = {key:'atleta', dir:'asc'};
+  const atlAccessor = (r,key)=>{
+    switch(key){
+      case 'atleta': return r.atleta||'';
+      case 'prova': return r.distancia*1000 + (r.estilo||'').charCodeAt(0);
+      case 'categoria': return catRank(r.categoria);
+      case 'tempo': return timeToSec(r.tempo);
+      case 'colocacao': return placeToNum(r.colocacao);
+      case 'data': return parseDateBR(r.data);
+      case 'competicao': return r.competicao||'';
+      case 'it': return parseFloat(r.it)||0;
+      default: return '';
+    }
+  };
   const render = ()=>{
     const f = {
       nome: document.getElementById('f-nome').value.trim().toLowerCase(),
@@ -833,7 +916,7 @@ function initAtletasView(){
     });
 
     let tableRows = filtered;
-    tableRows = [...tableRows].sort((a,b)=> a.atleta.localeCompare(b.atleta) || a.distancia-b.distancia || a.estilo.localeCompare(b.estilo));
+    tableRows = [...tableRows].sort((a,b)=>cmp(atlAccessor(a,atlSortState.key), atlAccessor(b,atlSortState.key), atlSortState.dir));
     const tbody = document.getElementById('tbody');
     tbody.innerHTML = '';
     tableRows.forEach(r=>{
@@ -848,7 +931,9 @@ function initAtletasView(){
     });
     document.getElementById('resultcount').innerHTML = `<b>${filtered.length}</b> resultados · <b>${athleteNames.length}</b> atletas`;
     document.getElementById('tabletitle').textContent = 'Todos os resultados' + (athleteNames.length ? ` (${athleteNames.length} atletas)` : '');
+    updateSortIndicators(document.getElementById('atl-thead'), atlSortState);
   };
+  wireSortableHeaders(document.getElementById('atl-thead'), atlSortState, render);
   document.getElementById('btn-clear').onclick = ()=>{
     ['f-nome'].forEach(id=>document.getElementById(id).value='');
     ['f-categoria','f-sexo','f-estilo','f-distancia','f-ano','f-cidade','f-competicao'].forEach(id=>document.getElementById(id).value='');
@@ -936,9 +1021,14 @@ function viewAtletaDetail(slug){
     </table></div></div>
 
     <div class="section-title"><span class="bar"></span>Histórico completo</div>
+    <div class="section-sub">Clique nos títulos das colunas para ordenar.</div>
     <div class="tablewrap"><div style="overflow-x:auto;"><table>
-      <thead><tr><th>Data</th><th>Competição</th><th>Prova</th><th>Tempo</th><th>Colocação</th><th>Pontos</th><th>IT</th></tr></thead>
-      <tbody>${rows.map(r=>`<tr class="${r.recorde?'record':''}">
+      <thead id="hist-thead"><tr>
+        <th data-key="data" data-dir="desc">Data</th><th data-key="competicao">Competição</th><th data-key="prova">Prova</th>
+        <th data-key="tempo" data-dir="asc">Tempo</th><th data-key="colocacao" data-dir="asc">Colocação</th>
+        <th data-key="pontos" data-dir="desc">Pontos</th><th data-key="it" data-dir="desc">IT</th>
+      </tr></thead>
+      <tbody id="hist-tbody">${rows.map(r=>`<tr class="${r.recorde?'record':''}">
         <td>${r.data}</td><td>${r.competicao}</td><td>${r.distancia}m ${r.estilo}</td>
         <td><b>${r.tempo}</b>${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
         <td>${placeCell(r.colocacao)}</td><td>${fmt(r.pontos)}</td><td>${fmt(r.it)}</td></tr>`).join('')}</tbody>
@@ -960,6 +1050,36 @@ function bioFor(name, meta){
   return `Atleta da categoria ${fmtCat(meta.categoria)} da DM Natação, equipe de Palmas-TO comandada pelo professor Diego Meza.`;
 }
 
+function initAtletaHistSort(slug){
+  const name = SLUG_TO_NAME[slug];
+  if(!name) return;
+  const thead = document.getElementById('hist-thead');
+  if(!thead) return;
+  const rows = athleteRows(name).slice().sort((a,b)=>a.distancia-b.distancia || a.estilo.localeCompare(b.estilo));
+  const sortState = {key:'data', dir:'desc'};
+  const accessor = (r,key)=>{
+    switch(key){
+      case 'data': return parseDateBR(r.data);
+      case 'competicao': return r.competicao||'';
+      case 'prova': return r.distancia*1000 + (r.estilo||'').charCodeAt(0);
+      case 'tempo': return timeToSec(r.tempo);
+      case 'colocacao': return placeToNum(r.colocacao);
+      case 'pontos': return parseFloat(r.pontos)||0;
+      case 'it': return parseFloat(r.it)||0;
+      default: return '';
+    }
+  };
+  const render = ()=>{
+    const sorted = rows.slice().sort((a,b)=>cmp(accessor(a,sortState.key), accessor(b,sortState.key), sortState.dir));
+    document.getElementById('hist-tbody').innerHTML = sorted.map(r=>`<tr class="${r.recorde?'record':''}">
+      <td>${r.data}</td><td>${r.competicao}</td><td>${r.distancia}m ${r.estilo}</td>
+      <td><b>${r.tempo}</b>${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
+      <td>${placeCell(r.colocacao)}</td><td>${fmt(r.pontos)}</td><td>${fmt(r.it)}</td></tr>`).join('');
+    updateSortIndicators(thead, sortState);
+  };
+  wireSortableHeaders(thead, sortState, render);
+  render();
+}
 function initAtletaDetailCharts(slug){
   const name = SLUG_TO_NAME[slug];
   if(!name) return;
@@ -1239,6 +1359,19 @@ function initRecordesView(){
 /* ============ VIEW: GALERIA ============ */
 route('/galeria', viewGaleria);
 function viewGaleria(){
+  const igCard = (href, photo, handle, name, meta) => `
+    <a class="ig-card" href="${href}" target="_blank" rel="noopener">
+      <img class="ig-card-photo" src="${photo}" alt="${name} no Instagram">
+      <div class="ig-card-body">
+        <div class="ig-card-head">${igIcon()}<b>@${handle}</b></div>
+        <p>${name} · ${meta}</p>
+        <span class="ig-card-cta">Ver perfil →</span>
+      </div>
+    </a>`;
+  const igCards = [
+    igCard('https://www.instagram.com/dmnatacao/', window.__IMG_LOGO__, 'dmnatacao', 'DM Natação', '405 seguidores · 12 publicações'),
+    igCard('https://www.instagram.com/diegoemeza1/', window.__IMG_BREAST__, 'diegoemeza1', 'Diego Meza', '4.634 seguidores · 137 publicações'),
+  ];
   return `
   <div class="wrap">
     <div class="pagehead"><h1>Galeria</h1><p>Momentos da equipe DM Natação dentro e fora da piscina.</p></div>
@@ -1246,6 +1379,11 @@ function viewGaleria(){
       <div class="gphoto"><img src="${window.__IMG_CLAP__}" alt="Pré-prova"><span>Concentração antes da prova</span></div>
       <div class="gphoto"><img src="${window.__IMG_BREAST__}" alt="Nado peito"><span>Técnica de nado peito</span></div>
       <div class="gphoto"><img src="${window.__IMG_PODIUM__}" alt="Pódio"><span>3º lugar geral — Campeonato Tocantinense de Águas Abertas</span></div>
+    </div>
+
+    <div class="section-title"><span class="bar"></span>Siga no Instagram</div>
+    <div class="ig-carousel">
+      <div class="ig-track">${igCards.join('')}${igCards.join('')}</div>
     </div>
     <footer>DM Natação — Palmas/TO</footer>
   </div>`;
@@ -1259,9 +1397,15 @@ function viewContato(){
     <div class="pagehead"><h1>Contato</h1><p>Fale com a equipe DM Natação.</p></div>
     <div class="gridcols2">
       <div class="contact-box">
-        <h3>Professor Diego Meza</h3>
-        <p>Guarda-vidas · Recordista estadual · Campeão Nacional</p>
-        <a class="btn btn-primary" href="https://wa.me/5563985114884" target="_blank" rel="noopener">💬 Falar no WhatsApp</a>
+        <div class="contact-box-text">
+          <h3>Professor Diego Meza</h3>
+          <p>🥇 Campeão Nacional 🇻🇪 · Campeão Norte-Nordeste 🇧🇷 (100m Livre) · 🏆 Recordista estadual (Tocantins) · Nº10 do Brasil — 200m Costas Sênior</p>
+          <p style="margin-top:8px;">🛟 Guarda-vidas · Aulas de natação em Palmas-TO, do iniciante ao avançado.</p>
+        </div>
+        <div class="contact-btns">
+          <a class="cbtn wa" href="https://wa.me/5563985114884" target="_blank" rel="noopener">💬 Falar no WhatsApp</a>
+          <a class="cbtn ig" href="https://www.instagram.com/diegoemeza1/" target="_blank" rel="noopener">${igIcon()} @diegoemeza1</a>
+        </div>
       </div>
       <div class="schedule-wrap" id="schedule-contato"></div>
     </div>
