@@ -205,6 +205,12 @@ html[data-theme="dark"] .profile-avatar span{color:var(--turq);}
 html[data-theme="dark"] .kpi .n{color:var(--turq);}
 .kpi .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
 .spec-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.evo-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+.evo-tabs{display:flex;gap:6px;flex-wrap:wrap;}
+.evo-tab{font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid var(--gray-brd);color:var(--muted);background:var(--gray-lt);cursor:pointer;transition:background .15s,color .15s,border-color .15s;}
+.evo-tab:hover{border-color:var(--turq-dark);color:var(--text);}
+.evo-tab.active{background:var(--turq);border-color:var(--turq);color:#04211E;}
+.evo-sub{font-size:11.5px;color:var(--muted);margin:-6px 0 10px;}
 .bio-text{color:var(--muted);font-size:13.5px;line-height:1.7;}
 .best-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:12px;}
 .best-item{background:var(--white);border:1px solid var(--gray-brd);border-radius:12px;padding:14px;box-shadow:var(--shadow);}
@@ -1016,7 +1022,11 @@ function viewAtletaDetail(slug){
         <div class="spec-row">${specialties.length ? specialties.map(s=>`<span class="pill">${s}</span>`).join('') : '<span class="pill">—</span>'}</div>
       </div>
       <div class="card" style="padding:18px;">
-        <h3 style="margin:0 0 12px;font-size:14.5px;">Evolução do Índice Técnico</h3>
+        <div class="evo-head">
+          <h3 style="margin:0;font-size:14.5px;">Evolução do Tempo</h3>
+          <div id="evo-style-tabs" class="evo-tabs"></div>
+        </div>
+        <div id="evo-sub" class="evo-sub"></div>
         <canvas id="chart-evolucao" height="140"></canvas>
       </div>
     </div>
@@ -1102,24 +1112,80 @@ function initAtletaHistSort(slug){
   wireSortableHeaders(thead, sortState, render);
   render();
 }
+function styleTimeSeries(name, estilo){
+  const rows = athleteRows(name).filter(r=>r.estilo===estilo);
+  if(!rows.length) return {distancia:null, rows:[]};
+  const byDist = {};
+  rows.forEach(r=>{ (byDist[r.distancia] = byDist[r.distancia] || []).push(r); });
+  let bestDist = null, bestCount = -1;
+  Object.keys(byDist).map(Number).sort((a,b)=>a-b).forEach(d=>{
+    const c = byDist[d].length;
+    if(c > bestCount){ bestCount = c; bestDist = d; }
+  });
+  const evRows = byDist[bestDist].slice().sort((a,b)=>parseDateBR(a.data)-parseDateBR(b.data));
+  return {distancia:bestDist, rows:evRows};
+}
+
+let evoChartInstance = null;
 function initAtletaDetailCharts(slug){
   const name = SLUG_TO_NAME[slug];
   if(!name) return;
-  const rows = athleteRows(name).slice().sort((a,b)=>{
-    const [d1,m1,y1]=a.data.split('/'); const [d2,m2,y2]=b.data.split('/');
-    return new Date(`${y1}-${m1}-${d1}`) - new Date(`${y2}-${m2}-${d2}`);
-  });
-  const css = getComputedStyle(document.documentElement);
-  const turq = css.getPropertyValue('--turq').trim();
+  const ESTILOS = ['Livre','Costas','Peito','Borboleta','Medley'];
+  const rows = athleteRows(name);
+  const disponiveis = ESTILOS.filter(e=>rows.some(r=>r.estilo===e));
+  if(!disponiveis.length) return;
+
+  const counts = {};
+  disponiveis.forEach(e=>{ counts[e] = rows.filter(r=>r.estilo===e).length; });
+  let estiloAtivo = disponiveis.slice().sort((a,b)=>counts[b]-counts[a])[0];
+
+  const tabsEl = document.getElementById('evo-style-tabs');
+  const subEl = document.getElementById('evo-sub');
   const canvas = document.getElementById('chart-evolucao');
   if(!canvas) return;
-  new Chart(canvas, {
-    type:'line',
-    data:{ labels: rows.map(r=>`${r.data} · ${r.distancia}m ${r.estilo}`),
-      datasets:[{label:'Índice Técnico', data: rows.map(r=>r.it), borderColor:turq, backgroundColor:turq+'33',
-        tension:.3, fill:true, pointRadius:4, pointBackgroundColor:turq }]},
-    options:{ plugins:{legend:{display:false}}, scales:{ x:{ticks:{font:{size:9}, maxRotation:40, minRotation:40}}, y:{beginAtZero:false} } }
-  });
+
+  function renderTabs(){
+    if(!tabsEl) return;
+    tabsEl.innerHTML = disponiveis.map(e=>
+      `<button type="button" class="evo-tab${e===estiloAtivo?' active':''}" data-estilo="${e}">${e}</button>`
+    ).join('');
+    tabsEl.querySelectorAll('.evo-tab').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        estiloAtivo = btn.getAttribute('data-estilo');
+        renderTabs();
+        renderChart();
+      });
+    });
+  }
+
+  function renderChart(){
+    const { distancia, rows: evRows } = styleTimeSeries(name, estiloAtivo);
+    if(subEl) subEl.textContent = distancia ? `${distancia}m ${estiloAtivo} — evolução cronológica` : '';
+
+    const css = getComputedStyle(document.documentElement);
+    const turq = css.getPropertyValue('--turq').trim();
+    const muted = css.getPropertyValue('--muted').trim();
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const tickColor = isDark ? '#AEBFD1' : muted;
+    const gridColor = isDark ? 'rgba(255,255,255,.16)' : 'rgba(15,27,45,.10)';
+
+    if(evoChartInstance){ evoChartInstance.destroy(); evoChartInstance = null; }
+    evoChartInstance = new Chart(canvas, {
+      type:'line',
+      data:{ labels: evRows.map(r=>`${r.data} · ${r.competicao}`),
+        datasets:[{label:'Tempo', data: evRows.map(r=>timeToSec(r.tempo)), borderColor:turq, backgroundColor:turq+'33',
+          tension:.3, fill:true, pointRadius:4, pointBackgroundColor:turq }]},
+      options:{ plugins:{ legend:{display:false},
+          tooltip:{ callbacks:{ label:(ctx)=>`Tempo: ${secToTime(ctx.parsed.y)}` } } },
+        scales:{
+          x:{ ticks:{font:{size:9}, maxRotation:40, minRotation:40, color:tickColor}, grid:{color:gridColor} },
+          y:{ beginAtZero:false, reverse:true, ticks:{ color:tickColor, callback:(v)=>secToTime(v) }, grid:{color:gridColor} }
+        } }
+    });
+  }
+
+  renderTabs();
+  renderChart();
 }
 
 /* ============ VIEW: RANKING ============ */
@@ -1395,77 +1461,4 @@ function viewGaleria(){
     igCard('https://www.instagram.com/diegoemeza1/', window.__IMG_BREAST__, 'diegoemeza1', 'Diego Meza', '4.634 seguidores · 137 publicações'),
   ];
   const photoSlide = (photo, alt, caption) => `
-    <div class="photo-slide"><img src="${photo}" alt="${alt}"><span>${caption}</span></div>`;
-  const photoSlides = [
-    photoSlide(window.__IMG_CLAP__, 'Pré-prova', 'Concentração antes da prova'),
-    photoSlide(window.__IMG_BREAST__, 'Nado peito', 'Técnica de nado peito'),
-    photoSlide(window.__IMG_MEDAL__, 'Diego Meza medalhista', '1º lugar geral — 100m Livre'),
-  ];
-  return `
-  <div class="wrap">
-    <div class="pagehead"><h1>Galeria</h1><p>Momentos da equipe DM Natação dentro e fora da piscina.</p></div>
-
-    <div class="photo-carousel">
-      <div class="photo-track">${photoSlides.join('')}${photoSlides.join('')}</div>
-    </div>
-
-    <div class="section-title"><span class="bar"></span>Siga no Instagram</div>
-    <div class="ig-static-row">${igCards.join('')}</div>
-    <footer>DM Natação — Palmas/TO</footer>
-  </div>`;
-}
-
-/* ============ VIEW: CONTATO ============ */
-route('/contato', viewContato);
-function viewContato(){
-  return `
-  <div class="wrap">
-    <div class="pagehead"><h1>Contato</h1><p>Fale com a equipe DM Natação.</p></div>
-    <div class="gridcols2">
-      <div class="contact-box">
-        <div class="contact-box-text">
-          <h3>Professor Diego Meza</h3>
-          <p>🥇 Campeão Nacional 🇻🇪 · Campeão Norte-Nordeste 🇧🇷 (100m Livre) · 🏆 Recordista estadual (Tocantins) · Nº10 do Brasil — 200m Costas Sênior</p>
-          <p style="margin-top:8px;">🛟 Guarda-vidas · Aulas de natação em Palmas-TO, do iniciante ao avançado.</p>
-        </div>
-        <div class="contact-btns">
-          <a class="cbtn wa" href="https://wa.me/5563985114884" target="_blank" rel="noopener">💬 Falar no WhatsApp</a>
-          <a class="cbtn ig" href="https://www.instagram.com/diegoemeza1/" target="_blank" rel="noopener">${igIcon()} @diegoemeza1</a>
-        </div>
-      </div>
-      <div class="schedule-wrap" id="schedule-contato"></div>
-    </div>
-    <footer>DM Natação — Palmas/TO</footer>
-  </div>`;
-}
-
-</script>
-<script>
-/* Theme toggle */
-(function(){
-  const root = document.documentElement;
-  const btn = document.getElementById('theme-toggle');
-  function applyIcon(){ btn.textContent = root.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'; }
-  btn.addEventListener('click', function(){
-    const cur = root.getAttribute('data-theme');
-    root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
-    applyIcon();
-    if(location.hash.slice(1).startsWith('/atleta/') || currentHash()==='/'){
-      /* re-render to refresh chart colors */
-      navigate();
-    }
-  });
-  applyIcon();
-})();
-/* Mobile nav burger */
-(function(){
-  const burger = document.getElementById('nav-burger');
-  const links = document.getElementById('navlinks');
-  burger.addEventListener('click', function(){ links.classList.toggle('open'); });
-  links.addEventListener('click', function(e){ if(e.target.classList.contains('navlink')) links.classList.remove('open'); });
-})();
-/* Boot */
-navigate();
-</script>
-</body>
-</html>
+    <div class="phot
