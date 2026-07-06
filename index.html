@@ -1170,6 +1170,18 @@ function initAtletaDetailCharts(slug){
     const gridColor = isDark ? 'rgba(255,255,255,.16)' : 'rgba(15,27,45,.10)';
     const shortDate = (d)=>{ const p = d.split('/'); return p.length===3 ? `${p[0]}/${p[1]}/${p[2].slice(2)}` : d; };
 
+    const secsArr = evRows.map(r=>timeToSec(r.tempo));
+    const minSecRaw = Math.min(...secsArr), maxSecRaw = Math.max(...secsArr);
+    const range = maxSecRaw - minSecRaw;
+    let stepSize = 1;
+    if(range > 120) stepSize = 30;
+    else if(range > 60) stepSize = 10;
+    else if(range > 20) stepSize = 5;
+    else if(range > 8) stepSize = 2;
+    const yMin = Math.floor(minSecRaw / stepSize) * stepSize;
+    const yMax = Math.ceil(maxSecRaw / stepSize) * stepSize;
+    const secToTimeWhole = (v)=>{ const s = Math.round(v); const m = Math.floor(s/60); const sec = s - m*60; return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); };
+
     if(evoChartInstance){ evoChartInstance.destroy(); evoChartInstance = null; }
     evoChartInstance = new Chart(canvas, {
       type:'line',
@@ -1183,7 +1195,7 @@ function initAtletaDetailCharts(slug){
             label:(ctx)=>`Tempo: ${secToTime(ctx.parsed.y)}` } } },
         scales:{
           x:{ ticks:{font:{size:10.5}, maxRotation:0, minRotation:0, autoSkip:true, maxTicksLimit:6, color:tickColor}, grid:{display:false} },
-          y:{ beginAtZero:false, reverse:true, ticks:{ color:tickColor, callback:(v)=>secToTime(v) }, grid:{color:gridColor} }
+          y:{ beginAtZero:false, min:yMin, max:yMax, ticks:{ stepSize, color:tickColor, callback:(v)=>secToTimeWhole(v) }, grid:{color:gridColor} }
         } }
     });
   }
