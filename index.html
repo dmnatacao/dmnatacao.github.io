@@ -444,6 +444,8 @@ DATA.atletas.forEach(a=>{ ATHLETE_BY_NAME[a.nome] = a; a.slug = slugify(a.nome);
 const SLUG_TO_NAME = {};
 DATA.atletas.forEach(a=>{ SLUG_TO_NAME[a.slug] = a.nome; });
 
+function displayName(name){ const m = ATHLETE_BY_NAME[name]; if(m && m.idade < 18){ const first = name.split(' ')[0]; return first; } return name; }
+
 function athleteRows(name){ return DATA.resultados.filter(r=>r.atleta===name); }
 function athleteMedals(name){
   const rows = athleteRows(name);
@@ -616,11 +618,11 @@ function viewHome(){
     <div class="gridcols2" style="margin-top:16px;">
       <div class="card" style="padding:16px;">
         <h3 style="margin:0 0 4px;font-size:14.5px;">Atleta mais ativo</h3>
-        <p style="margin:0;color:var(--muted);font-size:13px;">${stats.maisAtivo ? `<b style="color:var(--text)">${stats.maisAtivo.nome}</b> — ${stats.maisAtivo.n} provas disputadas` : '—'}</p>
+        <p style="margin:0;color:var(--muted);font-size:13px;">${stats.maisAtivo ? `<b style="color:var(--text)">${displayName(stats.maisAtivo.nome)}</b> — ${stats.maisAtivo.n} provas disputadas` : '—'}</p>
       </div>
       <div class="card" style="padding:16px;">
         <h3 style="margin:0 0 4px;font-size:14.5px;">Melhor Índice Técnico</h3>
-        <p style="margin:0;color:var(--muted);font-size:13px;">${stats.melhorIT ? `<b style="color:var(--text)">${stats.melhorIT.atleta}</b> — IT ${fmt(stats.melhorIT.it)} (${stats.melhorIT.distancia}m ${stats.melhorIT.estilo})` : '—'}</p>
+        <p style="margin:0;color:var(--muted);font-size:13px;">${stats.melhorIT ? `<b style="color:var(--text)">${displayName(stats.melhorIT.atleta)}</b> — IT ${fmt(stats.melhorIT.it)} (${stats.melhorIT.distancia}m ${stats.melhorIT.estilo})` : '—'}</p>
       </div>
     </div>
 
@@ -656,7 +658,7 @@ function viewHome(){
             ${d.ranked.map((r,i)=>`
               <div class="style-lb-row">
                 ${placeCell(i+1)}
-                <a class="rowlink style-lb-name" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${r.atleta}</a>
+                <a class="rowlink style-lb-name" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a>
                 <span class="style-lb-time">${r.tempo}</span>
               </div>`).join('')}
           </div>
@@ -934,8 +936,8 @@ function initAtletasView(){
         `<span class="eventchip ${r.recorde?'rec':''}">${r.distancia}m ${r.estilo} · ${r.tempo}${r.recorde?' 🏅':''}</span>`).join('');
       card.innerHTML = `
         <div class="acard-top">
-          <div class="avatar"><span>${initials(info.name)}</span></div>
-          <div><div class="acard-name">${info.name}</div><div class="acard-meta">${fmtCat(info.meta.categoria)} · ${info.meta.sexo==='F'?'Feminino':'Masculino'}</div></div>
+          <div class="avatar"><span>${initials(displayName(info.name))}</span></div>
+          <div><div class="acard-name">${displayName(info.name)}</div><div class="acard-meta">${fmtCat(info.meta.categoria)} · ${info.meta.sexo==='F'?'Feminino':'Masculino'}</div></div>
         </div>
         <div class="medals-row">${medalRow(info)}</div>
         <div class="eventchips">${chips}</div>`;
@@ -951,7 +953,7 @@ function initAtletasView(){
       const tr = document.createElement('tr');
       if(r.recorde) tr.className = 'record';
       tr.innerHTML = `
-        <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${r.atleta}</a></td>
+        <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
         <td>${r.distancia}m ${r.estilo}</td><td>${fmtCat(r.categoria)}</td>
         <td><b>${r.tempo}</b>${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
         <td>${placeCell(r.colocacao)}</td><td>${r.data}</td><td>${r.competicao}</td><td>${fmt(r.it)}</td>`;
@@ -992,9 +994,9 @@ function viewAtletaDetail(slug){
   <div class="wrap">
     <div style="padding-top:22px;"><a href="#/atletas" class="profile-back">← Voltar para Atletas</a></div>
     <div class="profile-head">
-      <div class="profile-avatar"><span>${initials(name)}</span></div>
+      <div class="profile-avatar"><span>${initials(displayName(name))}</span></div>
       <div class="profile-info">
-        <h1>${name}</h1>
+        <h1>${displayName(name)}</h1>
         <div class="profile-tags">
           <span class="pill">${fmtCat(meta.categoria)}</span>
           <span class="pill">${meta.sexo==='F'?'Feminino':'Masculino'}</span>
@@ -1048,7 +1050,7 @@ function viewAtletaDetail(slug){
         const pos = rank.findIndex(r=>r.atleta===name)+1;
         const leader = rank[0];
         return `<tr><td>${b.distancia}m ${b.estilo}</td><td>${placeCell(pos)} de ${rank.length}</td><td><b>${b.tempo}</b></td>
-          <td>${leader.atleta===name?'—':`${leader.atleta} (${leader.tempo})`}</td></tr>`;
+          <td>${leader.atleta===name?'—':`${displayName(leader.atleta)} (${leader.tempo})`}</td></tr>`;
       }).join('')}</tbody>
     </table></div></div>
 
@@ -1265,7 +1267,7 @@ function initRankingView(){
     }
     tbody.innerHTML = rk.map((r,i)=>`<tr class="${r.recorde?'record':''}">
       <td>${placeCell(i+1)}</td>
-      <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${r.atleta}</a></td>
+      <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
       <td><b>${r.tempo}</b>${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
       <td>${r.competicao}</td><td>${r.data}</td><td>${fmt(r.it)}</td></tr>`).join('');
     updateSortIndicators(document.getElementById('r-thead'), sortState);
@@ -1339,7 +1341,7 @@ function initResultadosView(){
     document.getElementById('rs-count').textContent = `${rows.length} resultado${rows.length===1?'':'s'} encontrado${rows.length===1?'':'s'}`;
     document.getElementById('rs-tbody').innerHTML = rows.map(r=>`<tr class="${r.recorde?'record':''}">
       <td>${r.data}</td><td>${r.competicao}</td><td>${r.cidade||'—'}</td>
-      <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${r.atleta}</a></td>
+      <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
       <td>${fmtCat(r.categoria)}</td><td>${r.distancia}m ${r.estilo}</td>
       <td><b>${r.tempo}</b>${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
       <td>${placeCell(r.colocacao)}</td><td>${fmt(r.pontos)}</td><td>${fmt(r.it)}</td></tr>`).join('')
@@ -1445,7 +1447,7 @@ function initRecordesView(){
         <div class="rc-badge">${r.recorde}</div>
         <h3>${r.distancia}m ${r.estilo}</h3>
         <div class="rc-time">${r.tempo}</div>
-        <div class="rc-athlete"><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${r.atleta}</a></div>
+        <div class="rc-athlete"><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></div>
         <div class="rc-meta">${fmtCat(r.categoria)} · ${r.sexo==='F'?'Feminino':'Masculino'}</div>
         <div class="rc-meta">${r.competicao} · ${r.data} · ${r.cidade||'Palmas/TO'}</div>
       </div>`).join('') || `<div class="empty-state"><p>Nenhum recorde encontrado com esses filtros.</p></div>`;
