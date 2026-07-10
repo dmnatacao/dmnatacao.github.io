@@ -105,6 +105,22 @@ html[data-theme="dark"] .statcard .stat-num{color:var(--turq);}
 .staffcard .role{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--turq-dark);font-weight:800;}
 .staffcard h3{margin:4px 0 10px;font-size:19px;}
 .staffcard ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;}
+.staff-unified{background:var(--white);border:1px solid var(--gray-brd);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+.su-photos{display:flex;gap:12px;margin-bottom:16px;}
+.su-photos img{width:50%;height:230px;object-fit:cover;border-radius:12px;display:block;}
+.su-body .role{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--turq-dark);font-weight:800;}
+.su-body h3{margin:4px 0 10px;font-size:20px;}
+.su-cols{display:flex;gap:24px;margin:14px 0;}
+.su-col{flex:1;min-width:0;}
+.su-name{font-size:12.5px;font-weight:800;color:var(--text);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em;}
+.su-col ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:5px;}
+.su-col li{font-size:13px;color:var(--muted);}
+.su-col li b{color:var(--text);font-weight:600;}
+.su-footer{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--gray-brd);font-size:13px;color:var(--muted);}
+.su-footer b{color:var(--text);}
+@media(max-width:720px){.su-photos{flex-direction:column;}
+  .su-photos img{width:100%;height:200px;}
+  .su-cols{flex-direction:column;gap:14px;}}
 .staffcard li{font-size:13.5px;color:var(--muted);}
 .staffcard li b{color:var(--text);font-weight:600;}
 .podium-photo{width:100%;border-radius:12px;margin-top:12px;}
@@ -742,26 +758,36 @@ function viewEquipe(){
   <div class="wrap">
     <div class="pagehead"><h1>Equipe</h1><p>Quem faz a DM Natação — corpo técnico e a história do time.</p></div>
 
-    <div class="staffgrid">
-      <div class="staffcard">
-        <div class="role">Professor · Fundador</div>
-        <h3>Diego Meza</h3>
-        <img class="podium-photo" src="${window.__IMG_BREAST__}" alt="Diego Meza nadando peito">
-        <p class="bio-text" style="margin-top:10px;">Atleta e treinador à frente da DM Natação em Palmas-TO. Guarda-vidas e recordista estadual, competiu representando o Tocantins em torneios regionais e nacionais.</p>
-        <ul style="margin-top:10px;">
-          <li>🥇 <b>Campeão Nacional</b> 🇻🇪</li>
-          <li>🥇 <b>Campeão Norte-Nordeste</b> 🇧🇷 (100m Livre)</li>
-          <li>🏆 <b>Recordista estadual</b> — Tocantins</li>
-          <li>🏊 <b>Nº10 do Brasil</b> — 200m Costas Sênior</li>
-          <li>🛟 Guarda-vidas</li>
-        </ul>
+    <div class="staff-unified">
+      <div class="su-photos">
+        <img src="${window.__IMG_BREAST__}" alt="Diego Meza nadando peito">
+        <img src="${window.__IMG_PODIUM__}" alt="Diego e Daniel Meza no pódio">
       </div>
-      <div class="staffcard">
-        <div class="role">Professor</div>
-        <h3>Daniel Meza</h3>
-        <p class="bio-text">Irmão do Diego e também professor de natação — apoia toda a equipe nos treinos diários e nas competições.</p>
-        <img class="podium-photo" src="${window.__IMG_PODIUM__}" alt="Diego e Daniel Meza no pódio">
-        <p class="bio-text" style="margin-top:10px;">🥉 3º lugar geral — Campeonato Tocantinense de Águas Abertas, com 19 atletas da equipe competindo. Primeiro pódio do time em uma prova por equipes.</p>
+      <div class="su-body">
+        <div class="role">Professores · DM Natação</div>
+        <h3>Diego &amp; Daniel Meza</h3>
+        <p class="bio-text">Os irmãos que comandam a DM Natação em Palmas-TO. Diego é o atleta, treinador e fundador da equipe; Daniel é professor de natação e árbitro nacional, apoiando os treinos e competições no dia a dia.</p>
+        <div class="su-cols">
+          <div class="su-col">
+            <div class="su-name">Diego Meza</div>
+            <ul>
+              <li>🥇 <b>Campeão Nacional</b> 🇻🇪</li>
+              <li>🥇 <b>Campeão Norte-Nordeste</b> 🇧🇷</li>
+              <li>🏆 <b>Recordista estadual</b> — TO</li>
+              <li>🛟 Guarda-vidas</li>
+            </ul>
+          </div>
+          <div class="su-col">
+            <div class="su-name">Daniel Meza</div>
+            <ul>
+              <li>📘 Metodologia da Natação — Tiago Martins</li>
+              <li>🚩 <b>Árbitro Nacional</b> — Natação e Águas Abertas</li>
+              <li>⛑️ Primeiros Socorros</li>
+              <li>🤹 Recreação</li>
+            </ul>
+          </div>
+        </div>
+        <p class="su-footer">🥉 <b>3º lugar geral</b> — Campeonato Tocantinense de Águas Abertas, com <b>19 atletas</b> da equipe competindo. Primeiro pódio do time em uma prova por equipes.</p>
       </div>
     </div>
 
