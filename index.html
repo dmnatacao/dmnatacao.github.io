@@ -307,8 +307,13 @@ html[data-theme="dark"] th.sortable-th.sort-desc::after{color:var(--turq);}
 .staffduo-highlight ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;}
 .staffduo-highlight li{font-size:13.5px;color:var(--muted);}
 .staffduo-highlight li b{color:var(--text);font-weight:600;}
+.staffduo-highlights{display:flex;gap:16px;align-items:stretch;}
+.staffduo-highlights .staffduo-highlight{flex:1;min-width:0;}
+.staffduo-subhead{margin:14px 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;}
+.staffduo-exp{margin:0;font-size:12.5px;color:var(--muted);line-height:1.5;}
 @media(max-width:720px){.staffcard-duo{flex-direction:column;align-items:center;text-align:left;}
-  .staffcard-duo .staffduo-photo{width:100%;max-width:260px;height:auto;}}
+  .staffcard-duo .staffduo-photo{width:100%;max-width:260px;height:auto;}
+  .staffduo-highlights{flex-direction:column;}}
 
 /* ---------------- DESTAQUES DM (style leaderboards) ---------------- */
 .style-hl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
@@ -630,17 +635,32 @@ function viewHome(){
     <div class="staffcard staffcard-duo">
       <img class="staffduo-photo" src="${window.__IMG_PODIUM__}" alt="Diego e Daniel Meza no pódio">
       <div class="staffduo-body">
-        <p class="staffduo-intro">Diego e Daniel Meza são os irmãos que comandam a DM Natação em Palmas-TO. Ambos guarda-vidas e professores de natação, conquistaram juntos o <b>3º lugar geral</b> no Campeonato Tocantinense de Águas Abertas (por equipes), com 19 atletas da equipe competindo.</p>
-        <div class="staffduo-highlight">
-          <div class="role">Professor · Fundador</div>
-          <h3>Diego Meza</h3>
-          <ul>
-            <li>🥇 <b>Campeão Nacional</b> 🇻🇪</li>
-            <li>🥇 <b>Campeão Norte-Nordeste</b> 🇧🇷 (100m Livre)</li>
-            <li>🏆 <b>Recordista estadual</b> — Tocantins</li>
-            <li>🏊 <b>Nº10 do Brasil</b> — 200m Costas Sênior</li>
-            <li>🛟 Guarda-vidas</li>
-          </ul>
+        <p class="staffduo-intro">Diego e Daniel Meza são os irmãos que comandam a DM Natação em Palmas-TO. Professores de natação, conquistaram juntos o <b>3º lugar geral</b> no Campeonato Tocantinense de Águas Abertas (por equipes), com 4 atletas da equipe competindo.</p>
+        <div class="staffduo-highlights">
+          <div class="staffduo-highlight">
+            <div class="role">Professor · Fundador</div>
+            <h3>Diego Meza</h3>
+            <ul>
+              <li>🥇 <b>Campeão Nacional</b> 🇻🇪</li>
+              <li>🥇 <b>Campeão Norte-Nordeste</b> 🇧🇷 (100m Livre)</li>
+              <li>🏆 <b>Recordista estadual</b> — Tocantins</li>
+              <li>🏊 <b>Nº10 do Brasil</b> — 200m Costas Sênior</li>
+              <li>🛟 Guarda-vidas</li>
+            </ul>
+          </div>
+          <div class="staffduo-highlight">
+            <div class="role">Professor</div>
+            <h3>Daniel Meza</h3>
+            <ul>
+              <li>🏊 <b>Professor de Natação</b></li>
+              <li>📘 Curso de Metodologia da Natação — Tiago Martins</li>
+              <li>🤹 Curso de Recreação</li>
+              <li>⛑️ Curso de Primeiros Socorros</li>
+              <li>🚩 <b>Árbitro Nacional</b> de Natação e Águas Abertas</li>
+            </ul>
+            <h4 class="staffduo-subhead">Experiência Profissional</h4>
+            <p class="staffduo-exp">Experiência no ensino de natação infantil, atuando no desenvolvimento da adaptação ao meio líquido, aprendizagem dos diferentes níveis de habilidade e aperfeiçoamento técnico, sempre priorizando a segurança, o desenvolvimento motor e o bem-estar dos alunos.</p>
+          </div>
         </div>
       </div>
     </div>
