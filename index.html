@@ -290,6 +290,38 @@ html[data-theme="dark"] .record-card .rc-time{color:var(--turq);}
 .record-card .rc-athlete{font-size:13.5px;font-weight:700;margin-bottom:4px;}
 .record-card .rc-meta{font-size:11.5px;color:var(--muted);}
 
+/* ---------------- DIEGO MEZA HIGHLIGHT ---------------- */
+.acard-diego{
+  background:linear-gradient(135deg,#F2F6FC 0%,#DCE7F7 55%,#C7D9F2 100%);
+  border:1px solid var(--navy-light);
+  box-shadow:0 6px 18px rgba(11,37,69,.18), var(--shadow);
+}
+html[data-theme="dark"] .acard-diego{
+  background:linear-gradient(135deg,#0d1c30 0%,#122744 55%,#173a66 100%);
+  border-color:var(--navy-light);
+  box-shadow:0 4px 14px rgba(0,0,0,.35);}
+.acard-diego .acard-name{color:var(--navy);font-weight:800;}
+html[data-theme="dark"] .acard-diego .acard-name{color:#9FC2F5;}
+tr.diego-row{background:linear-gradient(90deg, rgba(11,37,69,.10), rgba(23,58,102,.02));}
+html[data-theme="dark"] tr.diego-row{background:linear-gradient(90deg, rgba(23,58,102,.40), rgba(23,58,102,.06));}
+tr.diego-row td:first-child{box-shadow:inset 3px 0 0 var(--navy);}
+.diego-name{color:var(--navy) !important;font-weight:800;}
+html[data-theme="dark"] .diego-name{color:#9FC2F5 !important;}
+
+/* ---------------- PAGINATION ---------------- */
+.pagination{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.page-info{font-size:12px;color:var(--muted);width:100%;text-align:center;margin-bottom:4px;}
+.page-btn{font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:20px;border:1px solid var(--gray-brd);
+  background:var(--white);color:var(--text);cursor:pointer;transition:.15s;}
+.page-btn:hover:not(:disabled){border-color:var(--turq-dark);color:var(--turq-dark);}
+.page-btn:disabled{opacity:.4;cursor:default;}
+.page-nums{display:flex;gap:6px;align-items:center;}
+.page-num{width:32px;height:32px;border-radius:50%;border:1px solid var(--gray-brd);background:var(--white);
+  color:var(--text);font-size:12.5px;font-weight:700;cursor:pointer;transition:.15s;}
+.page-num:hover{border-color:var(--turq-dark);}
+.page-num.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.page-ellipsis{padding:0 4px;color:var(--muted);font-size:12.5px;}
+
 /* ---------------- MISC ---------------- */
 .mini-chip{display:inline-block;padding:2px 8px;border-radius:20px;background:var(--gray-mid);font-size:11px;font-weight:600;}
 .empty-state{background:var(--white);border:1px dashed var(--gray-brd);border-radius:var(--radius);padding:30px;text-align:center;color:var(--muted);}
@@ -509,6 +541,27 @@ function teamRanking(f){
   return Object.values(byAthlete).sort((a,b)=>a.sec-b.sec);
 }
 
+
+function teamMedalRanking(f){
+  f = f || {};
+  let rows = DATA.resultados.filter(r=>{
+    if(f.categoria && r.categoria !== f.categoria) return false;
+    if(f.sexo && r.sexo !== f.sexo) return false;
+    if(f.ano && anoOf(r.data) !== f.ano) return false;
+    return true;
+  });
+  const byAthlete = {};
+  rows.forEach(r=>{
+    if(!byAthlete[r.atleta]) byAthlete[r.atleta] = {atleta:r.atleta, ouro:0, prata:0, bronze:0};
+    if(r.colocacao==='1º') byAthlete[r.atleta].ouro++;
+    else if(r.colocacao==='2º') byAthlete[r.atleta].prata++;
+    else if(r.colocacao==='3º') byAthlete[r.atleta].bronze++;
+  });
+  return Object.values(byAthlete)
+    .map(a=>({...a, total:a.ouro+a.prata+a.bronze}))
+    .filter(a=>a.total>0)
+    .sort((a,b)=>b.total-a.total || b.ouro-a.ouro || b.prata-a.prata || b.bronze-a.bronze || a.atleta.localeCompare(b.atleta));
+}
 function teamStats(){
   const rows = DATA.resultados;
   const ouro = rows.filter(r=>r.colocacao==='1º').length;
@@ -973,11 +1026,12 @@ function initAtletasView(){
       const meta = ATHLETE_BY_NAME[name] || rows[0];
       const m = athleteMedals(name);
       return {name, meta, filteredRows, ...m};
-    }).sort((a,b)=> catRank(a.meta.categoria)-catRank(b.meta.categoria) || a.name.localeCompare(b.name));
+    }).sort((a,b)=> a.name.localeCompare(b.name));
 
     athletesInfo.forEach(info=>{
+      const isDiego = info.name === 'Diego Meza';
       const card = document.createElement('div');
-      card.className = 'acard' + (activeAthlete===info.name ? ' active':'');
+      card.className = 'acard' + (isDiego ? ' acard-diego':'') + (activeAthlete===info.name ? ' active':'');
       const chips = info.filteredRows.slice(0,4).map(r=>
         `<span class="eventchip ${r.recorde?'rec':''}">${r.distancia}m ${r.estilo} · ${r.tempo}${r.recorde?' 🏅':''}</span>`).join('');
       card.innerHTML = `
@@ -1256,28 +1310,24 @@ function initAtletaDetailCharts(slug){
 route('/ranking', viewRanking);
 function viewRanking(){
   const categorias = [...new Set(DATA.resultados.map(r=>r.categoria))].sort((a,b)=>catRank(a)-catRank(b));
-  const estilos = uniqueSorted(DATA.resultados.map(r=>r.estilo));
-  const distancias = [...new Set(DATA.resultados.map(r=>r.distancia))].sort((a,b)=>a-b);
   const anos = allAnos();
   return `
   <div class="wrap">
-    <div class="pagehead"><h1>Ranking Interno</h1><p>Classificação da equipe por prova, no estilo do ranking oficial da CBDA.</p></div>
+    <div class="pagehead"><h1>Ranking Interno</h1><p>Classificação geral da equipe por quantidade de medalhas.</p></div>
     <div class="filterbar">
       <div class="row">
         <div class="field"><label>Categoria</label><select id="r-categoria"><option value="">Todas</option>${categorias.map(c=>`<option value="${c}">${fmtCat(c)}</option>`).join('')}</select></div>
         <div class="field"><label>Sexo</label><select id="r-sexo"><option value="">Todos</option><option value="F">Feminino</option><option value="M">Masculino</option></select></div>
-        <div class="field"><label>Estilo</label><select id="r-estilo"><option value="">Todos</option>${estilos.map(e=>`<option value="${e}">${e}</option>`).join('')}</select></div>
-        <div class="field"><label>Distância</label><select id="r-distancia"><option value="">Todas</option>${distancias.map(d=>`<option value="${d}">${d}m</option>`).join('')}</select></div>
         <div class="field"><label>Ano</label><select id="r-ano"><option value="">Todos</option>${anos.map(a=>`<option value="${a}">${a}</option>`).join('')}</select></div>
-        <div class="field"><label>Piscina</label><select id="r-piscina"><option value="">Todas</option><option value="25">25m</option></select></div>
       </div>
     </div>
-    <div class="section-title"><span class="bar"></span>Classificação</div>
-    <div class="section-sub">Clique nos títulos das colunas para ordenar (ex.: Data, do mais recente ao mais antigo).</div>
+    <div class="section-title"><span class="bar"></span>Classificação por medalhas</div>
+    <div class="section-sub">Clique nos títulos das colunas para ordenar.</div>
     <div class="tablewrap"><div style="overflow-x:auto;"><table>
       <thead id="r-thead"><tr>
-        <th data-key="pos" data-dir="asc">Pos.</th><th data-key="atleta">Atleta</th><th data-key="tempo" data-dir="asc">Tempo</th>
-        <th data-key="competicao">Competição</th><th data-key="data" data-dir="desc">Data</th><th data-key="it" data-dir="desc">IT</th>
+        <th data-key="pos" data-dir="asc">Pos.</th><th data-key="atleta">Atleta</th>
+        <th data-key="ouro" data-dir="desc">🥇 Ouro</th><th data-key="prata" data-dir="desc">🥈 Prata</th>
+        <th data-key="bronze" data-dir="desc">🥉 Bronze</th><th data-key="total" data-dir="desc">Total</th>
       </tr></thead>
       <tbody id="r-tbody"></tbody>
     </table></div></div>
@@ -1285,14 +1335,14 @@ function viewRanking(){
   </div>`;
 }
 function initRankingView(){
-  const sortState = {key:'pos', dir:'asc'};
+  const sortState = {key:'total', dir:'desc'};
   const accessor = (r,key)=>{
     switch(key){
       case 'atleta': return r.atleta||'';
-      case 'tempo': return timeToSec(r.tempo);
-      case 'competicao': return r.competicao||'';
-      case 'data': return parseDateBR(r.data);
-      case 'it': return parseFloat(r.it)||0;
+      case 'ouro': return r.ouro;
+      case 'prata': return r.prata;
+      case 'bronze': return r.bronze;
+      case 'total': return r.total;
       default: return 0;
     }
   };
@@ -1300,31 +1350,24 @@ function initRankingView(){
     const f = {
       categoria: document.getElementById('r-categoria').value,
       sexo: document.getElementById('r-sexo').value,
-      estilo: document.getElementById('r-estilo').value,
-      distancia: document.getElementById('r-distancia').value,
       ano: document.getElementById('r-ano').value,
-      piscina: document.getElementById('r-piscina').value,
     };
-    let rk = teamRanking(f);
+    let rk = teamMedalRanking(f);
     const tbody = document.getElementById('r-tbody');
-    if(rk.length === 0){ tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:30px;">Selecione um estilo e distância para ver a classificação, ou nenhum resultado bate com os filtros.</td></tr>`; updateSortIndicators(document.getElementById('r-thead'), sortState); return; }
-    if(sortState.key !== 'pos'){
-      rk = rk.slice().sort((a,b)=>cmp(accessor(a,sortState.key), accessor(b,sortState.key), sortState.dir));
-    }
-    tbody.innerHTML = rk.map((r,i)=>`<tr class="${r.recorde?'record':''}">
+    if(rk.length === 0){ tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:30px;">Nenhum atleta com medalhas para esses filtros.</td></tr>`; updateSortIndicators(document.getElementById('r-thead'), sortState); return; }
+    rk = rk.slice().sort((a,b)=>cmp(accessor(a,sortState.key), accessor(b,sortState.key), sortState.dir));
+    tbody.innerHTML = rk.map((r,i)=>`<tr class="${r.atleta==='Diego Meza'?'diego-row':''}">
       <td>${placeCell(i+1)}</td>
-      <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
-      <td><b>${r.tempo}</b>${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
-      <td>${r.competicao}</td><td>${r.data}</td><td>${fmt(r.it)}</td></tr>`).join('');
+      <td><a class="rowlink ${r.atleta==='Diego Meza'?'diego-name':''}" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
+      <td>${r.ouro}</td><td>${r.prata}</td><td>${r.bronze}</td><td><b>${r.total}</b></td></tr>`).join('');
     updateSortIndicators(document.getElementById('r-thead'), sortState);
   };
   wireSortableHeaders(document.getElementById('r-thead'), sortState, render);
-  ['r-categoria','r-sexo','r-estilo','r-distancia','r-ano','r-piscina'].forEach(id=>{
+  ['r-categoria','r-sexo','r-ano'].forEach(id=>{
     document.getElementById(id).addEventListener('change', render);
   });
   render();
 }
-
 function initContatoView(){ const el = document.getElementById('schedule-contato'); if(el) el.innerHTML = scheduleHTML(); }
 
 /* ============ VIEW: RESULTADOS ============ */
@@ -1351,11 +1394,14 @@ function viewResultados(){
       </tr></thead>
       <tbody id="rs-tbody"></tbody>
     </table></div></div>
+    <div class="pagination" id="rs-pagination"></div>
     <footer>DM Natação — Palmas/TO</footer>
   </div>`;
 }
 function initResultadosView(){
   const sortState = {key:'data', dir:'desc'};
+  const PAGE_SIZE = 25;
+  let page = 1;
   const accessor = (r,key)=>{
     switch(key){
       case 'data': return parseDateBR(r.data);
@@ -1371,6 +1417,29 @@ function initResultadosView(){
       default: return '';
     }
   };
+  const renderPagination = (totalRows)=>{
+    const totalPages = Math.max(1, Math.ceil(totalRows / PAGE_SIZE));
+    if(page > totalPages) page = totalPages;
+    const el = document.getElementById('rs-pagination');
+    if(totalPages <= 1){ el.innerHTML = ''; return; }
+    const nums = [];
+    for(let p=1;p<=totalPages;p++){
+      if(p===1 || p===totalPages || Math.abs(p-page)<=1) nums.push(p);
+      else if(nums[nums.length-1] !== '…') nums.push('…');
+    }
+    el.innerHTML = `
+      <button class="page-btn" id="pg-prev" ${page===1?'disabled':''}>← Anterior</button>
+      <div class="page-nums">${nums.map(p=> p==='…' ? `<span class="page-ellipsis">…</span>` : `<button class="page-num ${p===page?'active':''}" data-page="${p}">${p}</button>`).join('')}</div>
+      <button class="page-btn" id="pg-next" ${page===totalPages?'disabled':''}>Próxima →</button>
+    `;
+    const prevBtn = document.getElementById('pg-prev');
+    const nextBtn = document.getElementById('pg-next');
+    if(prevBtn) prevBtn.onclick = ()=>{ if(page>1){ page--; render(); window.scrollTo({top:0,behavior:'smooth'}); } };
+    if(nextBtn) nextBtn.onclick = ()=>{ if(page<totalPages){ page++; render(); window.scrollTo({top:0,behavior:'smooth'}); } };
+    el.querySelectorAll('.page-num').forEach(btn=>{
+      btn.onclick = ()=>{ page = parseInt(btn.dataset.page,10); render(); window.scrollTo({top:0,behavior:'smooth'}); };
+    });
+  };
   const render = ()=>{
     const busca = norm(document.getElementById('rs-busca').value);
     const ano = document.getElementById('rs-ano').value;
@@ -1385,18 +1454,24 @@ function initResultadosView(){
     });
     rows = rows.slice().sort((a,b)=>cmp(accessor(a,sortState.key), accessor(b,sortState.key), sortState.dir));
     document.getElementById('rs-count').textContent = `${rows.length} resultado${rows.length===1?'':'s'} encontrado${rows.length===1?'':'s'}`;
-    document.getElementById('rs-tbody').innerHTML = rows.map(r=>`<tr class="${r.recorde?'record':''}">
+    const totalRows = rows.length;
+    const totalPages = Math.max(1, Math.ceil(totalRows / PAGE_SIZE));
+    if(page > totalPages) page = totalPages;
+    const start = (page-1)*PAGE_SIZE;
+    const pageRows = rows.slice(start, start+PAGE_SIZE);
+    document.getElementById('rs-tbody').innerHTML = pageRows.map(r=>`<tr class="${r.recorde?'record':''} ${r.atleta==='Diego Meza'?'diego-row':''}">
       <td>${r.data}</td><td>${r.competicao}</td><td>${r.cidade||'—'}</td>
-      <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
+      <td><a class="rowlink ${r.atleta==='Diego Meza'?'diego-name':''}" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
       <td>${fmtCat(r.categoria)}</td><td>${r.distancia}m ${r.estilo}</td>
       <td><b>${r.tempo}</b>${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
       <td>${placeCell(r.colocacao)}</td><td>${fmt(r.pontos)}</td><td>${fmt(r.it)}</td></tr>`).join('')
       || `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:30px;">Nenhum resultado encontrado.</td></tr>`;
     updateSortIndicators(document.getElementById('rs-thead'), sortState);
+    renderPagination(totalRows);
   };
-  wireSortableHeaders(document.getElementById('rs-thead'), sortState, render);
-  ['rs-busca'].forEach(id=>document.getElementById(id).addEventListener('input', render));
-  ['rs-ano','rs-categoria','rs-recorde'].forEach(id=>document.getElementById(id).addEventListener('change', render));
+  wireSortableHeaders(document.getElementById('rs-thead'), sortState, ()=>{ page=1; render(); });
+  ['rs-busca'].forEach(id=>document.getElementById(id).addEventListener('input', ()=>{ page=1; render(); }));
+  ['rs-ano','rs-categoria','rs-recorde'].forEach(id=>document.getElementById(id).addEventListener('change', ()=>{ page=1; render(); }));
   render();
 }
 
