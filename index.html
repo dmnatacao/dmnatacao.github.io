@@ -21,7 +21,7 @@
 </style>
 <!-- 25/10/2026 (segurança): integrity = impressão digital do arquivo; se o CDN entregar algo diferente, o navegador não executa.
      Ao trocar a versão de uma biblioteca, trocar também o integrity (o cdnjs mostra o valor ao copiar o link). -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha384-DhxhYObIMeMNGyAG7iK11OHzBIKyEIeRL0ad1iFPAOwZB8iirUlTT0O/WJJUk8+o" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- 10/11/2026: Chart.js (4.4.0, mesmo integrity) agora só carrega ao abrir a página de um atleta: ver carregarChartJs() -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha384-HOvlOYPIs/zjoIkWUGXkVmXsjr8GuZLV+Q+rcPwmJOVZVpvTSXQChiN4t9Euv9Vc" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" integrity="sha384-P8VzCVnT9NBUkMrpcIZrJbA7EBjJvh/fJS6PmP+4nLIM284DtsImIv8D0fFjIkeh" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
@@ -3105,7 +3105,30 @@ function styleTimeSeries(name, estilo){
 }
 
 let evoChartInstance = null;
+/* Carrega o Chart.js só quando precisa (perfil do atleta); com SRI, igual ao antigo <script> do <head> */
+let chartJsPromessa = null;
+function carregarChartJs(){
+  if(window.Chart) return Promise.resolve();
+  if(!chartJsPromessa){
+    chartJsPromessa = new Promise((ok, falha)=>{
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js';
+      s.integrity = 'sha384-DhxhYObIMeMNGyAG7iK11OHzBIKyEIeRL0ad1iFPAOwZB8iirUlTT0O/WJJUk8+o';
+      s.crossOrigin = 'anonymous'; s.referrerPolicy = 'no-referrer';
+      s.onload = ok;
+      s.onerror = ()=>{ chartJsPromessa = null; falha(new Error('Chart.js não carregou')); };
+      document.head.appendChild(s);
+    });
+  }
+  return chartJsPromessa;
+}
 function initAtletaDetailCharts(slug){
+  carregarChartJs().then(()=>{
+    // se a pessoa já saiu do perfil enquanto carregava, não desenha
+    if(document.getElementById('chart-evolucao')) montarGraficoAtleta(slug);
+  }).catch(()=>{});
+}
+function montarGraficoAtleta(slug){
   const name = SLUG_TO_NAME[slug];
   if(!name) return;
   const ESTILOS = ['Livre','Costas','Peito','Borboleta','Medley'];
