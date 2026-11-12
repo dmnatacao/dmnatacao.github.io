@@ -6,7 +6,7 @@
 <!-- 25/10/2026 (segurança): o GitHub Pages não deixa configurar cabeçalhos, então a regra de conteúdo vai aqui.
      Só carrega: scripts do próprio site e do cdnjs, estilos e fontes do próprio site, imagens do site (img/ e SVG embutido).
      Ao incluir algo de outro endereço (vídeo, mapa, contador de visitas), acrescentar o endereço na regra certa. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-xfF3r7rpUMZpuv8+6li4z8xzWLG2cn08Fl3rc5AJPdk=' 'sha256-05M7j0CG2biolfRvSXwh/zMBjI5YaGPC3U3RZlRxC/o=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-Ps6oFUq4WexKzULkjopGgIveAJ39LUJrjai9NaFwpIE=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-xfF3r7rpUMZpuv8+6li4z8xzWLG2cn08Fl3rc5AJPdk=' 'sha256-hYU5JTVSTHsj/R7xARDpqjIcmv45Xcp18K68VTayBRQ=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-Ps6oFUq4WexKzULkjopGgIveAJ39LUJrjai9NaFwpIE=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>DM Natação — Sistema de Atletas</title>
 <!-- 25/10/2026 (item 4, velocidade): a Jost (única fonte do site, licença livre OFL) fica no próprio site em fonts/.
@@ -1613,13 +1613,14 @@ const limpaTexto = s => s.replace(/[<>]/g, '').replace(/"/g, '”').replace(/`/g
 const P50 = new Set(DATA.resultados.filter(r=>Number(r.piscina)===50).map(r=>[r.atleta,r.distancia,r.estilo,r.tempo].join('|')));
 const eh50 = r => P50.has([r.atleta,r.distancia,r.estilo,r.tempo].join('|'));
 const selo50 = r => eh50(r) ? '<span class="selo50" title="Tempo nadado em piscina de 50 m">50 m</span>' : '';
-/* 05/11/2026: patrocinadores (5 com o mesmo destaque, sem link por enquanto). Logos em img/patrocinadores/ (webp). fundo = cor do cartao */
+/* 05/11/2026: patrocinadores (6 com o mesmo destaque, sem link por enquanto). Logos em img/patrocinadores/ (webp). fundo = cor do cartao */
 const PATROCINADORES = [
   {nome:'Dale Carnegie Tocantins', img:'img/patrocinadores/dale-carnegie.webp', fundo:'claro'},
   {nome:'Lads Design', img:'img/patrocinadores/lads-design.webp', fundo:'claro'},
   {nome:'Pousada Caf\u00e9 na Mata', img:'img/patrocinadores/pousada-cafe-na-mata.webp', fundo:'escuro'},
   {nome:'Civil Work Engenharia', img:'img/patrocinadores/civil-work-engenharia.webp', fundo:'claro'},
   {nome:'PMW SUP', img:'img/patrocinadores/pmw-sup.webp', fundo:'claro'},
+{nome:'Tania Felix Nutri\u00e7\u00e3o e Esporte', img:'img/patrocinadores/tania-felix-nutricao.webp', fundo:'claro'},
 ];
 function patrocinadoresHTML(titulo, sub){
   return `<div class="section-title"><span class="bar"></span>${titulo}</div>
