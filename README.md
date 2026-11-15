@@ -20,7 +20,7 @@ Este repositório é publicado via GitHub Pages a partir da branch `main` (raiz 
 
 ## Privacidade
 
-Os atletas da equipe incluem menores de idade. Por padrão, o site público **não exibe idade nem ano de nascimento** de atletas menores de 18 anos — apenas nome e categoria. Esses dados completos permanecem apenas na planilha interna (`DM_Natacao_Historico.xlsx`), que não faz parte deste repositório.
+Os atletas da equipe incluem menores de idade. O site público **não exibe nem guarda no código-fonte** a idade ou o ano de nascimento de atletas menores de 18 anos — apenas nome e categoria (menores de 12: nome e inicial do sobrenome). Esses dados completos permanecem apenas na planilha interna (`DM_Natacao_Historico.xlsx`), que não faz parte deste repositório.
 
 ## Atualização de dados
 
