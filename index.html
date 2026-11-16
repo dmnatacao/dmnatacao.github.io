@@ -6,7 +6,7 @@
 <!-- 25/10/2026 (segurança): o GitHub Pages não deixa configurar cabeçalhos, então a regra de conteúdo vai aqui.
      Só carrega: scripts do próprio site e do cdnjs, estilos e fontes do próprio site, imagens do site (img/ e SVG embutido).
      Ao incluir algo de outro endereço (vídeo, mapa, contador de visitas), acrescentar o endereço na regra certa. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-mkkr+rtmDCkOGBt6yvQWarbtAaQonfntAdl6Ze5i3Wc=' 'sha256-MgGeDTSs6h6RioQALpzWqwYwwZTCk0S/S/NXxKBLOM0=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-siPcLIe5mjA+zhh0NoY6q3JXUG5b3TALK3yDdseIhDU=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-mkkr+rtmDCkOGBt6yvQWarbtAaQonfntAdl6Ze5i3Wc=' 'sha256-ii5Z4FOCM8UHCSVVdEGEjikFYwRP35FFvdZ6DrSSHec=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-siPcLIe5mjA+zhh0NoY6q3JXUG5b3TALK3yDdseIhDU=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>DM Natação — Sistema de Atletas</title>
 <!-- 25/10/2026 (item 4, velocidade): a Jost (única fonte do site, licença livre OFL) fica no próprio site em fonts/.
@@ -3834,14 +3834,14 @@ function viewContato(){
    PRIV_VIGOR: trocar para o dia em que a página for ao ar (publicação). Ao ligar o contador de visitas (item 7),
    mudar a seção 6 ("não mede visitas") e o doc juntos. */
 route('/privacidade', viewPrivacidade);
-const PRIV_VIGOR = '10/11/2026';
+const PRIV_VIGOR = '16/11/2026';
 const PRIV_WA = 'https://wa.me/5563985114884?text=' + encodeURIComponent('Olá! Quero falar sobre a Política de Privacidade do site da DM Natação.');
 const PRIV_SECOES = [
   ['Quem somos', `
     <p>A DM Natação é uma equipe de natação de Palmas/TO, coordenada pelo professor Diego Meza, e responde pelos dados pessoais deste site. Contato: <a href="${PRIV_WA}" target="_blank" rel="noopener">WhatsApp (63) 98511-4884</a>.</p>`],
   ['Que dados aparecem', `
     <ul>
-      <li><b>Atletas:</b> nome (de 12 a 17 anos, nome completo; de menores de 12 anos, só o primeiro nome e a inicial do sobrenome), sexo, ano de nascimento, categoria e resultados de competições (prova, tempo, colocação, data, cidade e competição), com as medalhas, recordes e ranking calculados a partir deles.</li>
+      <li><b>Atletas:</b> nome (de 12 a 17 anos, nome completo; de menores de 12 anos, só o primeiro nome e a inicial do sobrenome), sexo, categoria e resultados de competições (prova, tempo, colocação, data, cidade e competição), com as medalhas, recordes e ranking calculados a partir deles. O ano de nascimento aparece só para atletas maiores de idade.</li>
       <li><b>Professores:</b> nome, função, currículo, fotos e perfis de Instagram, com autorização deles.</li>
     </ul>
     <p>Não mostramos data completa de nascimento, documentos, endereço, telefone, e-mail nem dados de saúde. O site não tem cadastro, login, formulário nem pagamento.</p>`],
@@ -3849,8 +3849,8 @@ const PRIV_SECOES = [
     <p>Os resultados vêm dos boletins oficiais das entidades que organizam as competições, como a FAETO e a CBDA, que já os tornaram públicos. Usamos esses dados só para mostrar o histórico e as conquistas dos atletas e da equipe, com finalidade esportiva (Lei Geral de Proteção de Dados — LGPD, art. 7º, § 3º) e no melhor interesse das crianças e dos adolescentes (art. 14). Não vendemos, não emprestamos e não usamos os dados para publicidade.</p>`],
   ['Atletas menores de idade', `
     <ul class="priv-destaque">
-      <li>Mostramos só o mínimo: nome, ano de nascimento, categoria e resultados oficiais, nada além do que está nos boletins.</li>
-      <li>De 12 a 17 anos, o atleta aparece com o nome completo. Com menos de 12 anos, aparece só com o primeiro nome e a inicial do sobrenome (exemplo: Pedro M.). A idade é contada pelo ano de nascimento (ano atual menos o ano em que nasceu).</li>
+      <li>Mostramos só o mínimo: nome, categoria e resultados oficiais, nada além do que está nos boletins. Não mostramos idade nem ano de nascimento de menores.</li>
+      <li>De 12 a 17 anos, o atleta aparece com o nome completo. Com menos de 12 anos, aparece só com o primeiro nome e a inicial do sobrenome (exemplo: Pedro M.).</li>
       <li>Se um dos pais ou responsável pedir, <b>retiramos os dados do atleta</b>, sem prejuízo para aulas, treinos e competições.</li>
     </ul>`],
   ['Cookies e serviços externos', `
@@ -3864,14 +3864,14 @@ const PRIV_SECOES = [
     <p>O atleta, ou um dos pais ou responsável se ele for menor, pode pedir para saber quais dados aparecem, corrigir dados errados, retirar os dados do site ou retirar uma autorização que tenha dado.</p>
     <p>Peça pelo <a href="${PRIV_WA}" target="_blank" rel="noopener">WhatsApp (63) 98511-4884</a>, com o nome do atleta. Podemos pedir uma confirmação simples de quem pede, para proteger o atleta. <b>Respondemos em até 15 dias.</b> Você também pode procurar a Autoridade Nacional de Proteção de Dados (ANPD), em <a href="https://www.gov.br/anpd" target="_blank" rel="noopener">gov.br/anpd</a>.</p>`],
   ['Segurança e mudanças', `
-    <p>O site usa conexão segura (HTTPS) e só a equipe responsável altera o conteúdo. Esta é uma versão provisória e será atualizada; a data da versão em vigor fica no topo da página.</p>`]
+    <p>O site usa conexão segura (HTTPS) e só a equipe responsável altera o conteúdo. Esta política pode ser atualizada; a data da versão em vigor fica no topo da página.</p>`]
 ];
 function viewPrivacidade(){
   return `
   <div class="wrap">
     <div class="pagehead"><h1 data-curto="Privacidade">Política de Privacidade</h1>
       <p>Como a DM Natação cuida dos dados que aparecem neste site.</p>
-      <span class="priv-versao"><b>Versão provisória</b> · em vigor desde ${PRIV_VIGOR}</span>
+      <span class="priv-versao"><b>Versão 1</b> · em vigor desde ${PRIV_VIGOR}</span>
     </div>
     <div class="priv-grid">
       <nav class="priv-indice" aria-label="Seções da política">
@@ -3880,7 +3880,7 @@ function viewPrivacidade(){
       </nav>
       <div>
         <article class="card priv-doc">
-          <p class="priv-intro">Esta é a Política de Privacidade do site da DM Natação, em versão provisória. Ela explica quais dados aparecem aqui e como pedir correção ou retirada.</p>
+          <p class="priv-intro">Esta é a Política de Privacidade do site da DM Natação. Ela explica quais dados aparecem aqui e como pedir correção ou retirada.</p>
           ${PRIV_SECOES.map(([t, html], i)=>`<section id="priv-${i+1}" aria-labelledby="priv-${i+1}-t"><h2 id="priv-${i+1}-t"><span class="priv-num" aria-hidden="true">${i+1}</span><span>${t}</span></h2>${html}</section>`).join('')}
         </article>
         <div class="contact-box priv-contato">
