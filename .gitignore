@@ -1,0 +1,13 @@
+# Segredos e chaves
+.env
+.env.*
+*.key
+*.pem
+
+# Planilhas e dados soltos (a base do site fica fora do repo)
+*.xlsx
+*.csv
+
+# Sistema e ferramentas locais
+.DS_Store
+.claude/
