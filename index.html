@@ -6,7 +6,7 @@
 <!-- 25/10/2026 (segurança): o GitHub Pages não deixa configurar cabeçalhos, então a regra de conteúdo vai aqui.
      Só carrega: scripts do próprio site e do cdnjs, estilos e fontes do próprio site, imagens do site (img/ e SVG embutido).
      Ao incluir algo de outro endereço (vídeo, mapa, contador de visitas), acrescentar o endereço na regra certa. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-aIN+DXfIDnYrTphANXfNAiuOJogGLwDGgsQb4y+9qPI=' 'sha256-EuNhhiL1K705342+hY5Fb0EdpaElurJGAY4eb02hR0w=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-siPcLIe5mjA+zhh0NoY6q3JXUG5b3TALK3yDdseIhDU=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-aIN+DXfIDnYrTphANXfNAiuOJogGLwDGgsQb4y+9qPI=' 'sha256-uUCb6Bl3n5vIcSKwVI46HFLh1wFaVa5rdwn33Rg4VJ4=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-siPcLIe5mjA+zhh0NoY6q3JXUG5b3TALK3yDdseIhDU=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>DM Natação — Sistema de Atletas</title>
 <!-- 18/11/2026 (item c, domínio): endereço oficial e etiquetas de compartilhamento (Google, WhatsApp). Só texto, sem script: a CSP não muda. -->
@@ -133,6 +133,8 @@ html[data-theme="dark"] .selo50{color:var(--turq-dark);}
 .patro{margin:0;height:132px;display:flex;align-items:center;justify-content:center;padding:18px 24px;border-radius:var(--radius);border:1px solid var(--gray-brd);box-shadow:var(--shadow);overflow:hidden;}
 .patro.claro{background:#fff;}
 .patro.escuro{background:#000;border-color:#000;padding:6px 14px;}
+.patro.cheio{padding:0;}
+.patro.cheio img{width:100%;height:100%;object-fit:cover;object-position:center;}
 .patro img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:50px 0 30px;border-top:1px solid var(--gray-brd);margin-top:60px;}
 
@@ -1681,7 +1683,7 @@ const limpaTexto = s => s.replace(/[<>]/g, '').replace(/"/g, '”').replace(/`/g
 const P50 = new Set(DATA.resultados.filter(r=>Number(r.piscina)===50).map(r=>[r.atleta,r.distancia,r.estilo,r.tempo].join('|')));
 const eh50 = r => P50.has([r.atleta,r.distancia,r.estilo,r.tempo].join('|'));
 const selo50 = r => eh50(r) ? '<span class="selo50" title="Tempo nadado em piscina de 50 m">50 m</span>' : '';
-/* 05/11/2026: patrocinadores (6 com o mesmo destaque, sem link por enquanto). Logos em img/patrocinadores/ (webp). fundo = cor do cartao */
+/* 05/11/2026: patrocinadores (8 desde 25/11; 'cheio' = imagem quadrada preenchendo o cartao) (6 com o mesmo destaque, sem link por enquanto). Logos em img/patrocinadores/ (webp). fundo = cor do cartao */
 const PATROCINADORES = [
   {nome:'Dale Carnegie Tocantins', img:'img/patrocinadores/dale-carnegie.webp', fundo:'claro'},
   {nome:'Lads Design', img:'img/patrocinadores/lads-design.webp', fundo:'claro'},
@@ -1689,6 +1691,8 @@ const PATROCINADORES = [
   {nome:'Civil Work Engenharia', img:'img/patrocinadores/civil-work-engenharia.webp', fundo:'claro'},
   {nome:'PMW SUP', img:'img/patrocinadores/pmw-sup.webp', fundo:'claro'},
 {nome:'Tania Felix Nutri\u00e7\u00e3o e Esporte', img:'img/patrocinadores/tania-felix-nutricao.webp', fundo:'claro'},
+  {nome:'Emporium Piscinas', img:'img/patrocinadores/emporium-piscinas.webp', fundo:'escuro'},
+  {nome:'Kampai', img:'img/patrocinadores/kampai.webp', fundo:'cheio'},
 ];
 function patrocinadoresHTML(titulo, sub){
   return `<div class="section-title"><span class="bar"></span>${titulo}</div>
