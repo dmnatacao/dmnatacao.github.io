@@ -6,7 +6,7 @@
 <!-- 25/10/2026 (segurança): o GitHub Pages não deixa configurar cabeçalhos, então a regra de conteúdo vai aqui.
      Só carrega: scripts do próprio site e do cdnjs, estilos e fontes do próprio site, imagens do site (img/ e SVG embutido).
      Ao incluir algo de outro endereço (vídeo, mapa, contador de visitas), acrescentar o endereço na regra certa. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-aIN+DXfIDnYrTphANXfNAiuOJogGLwDGgsQb4y+9qPI=' 'sha256-jLx7Po+UwN7G33k3aVKMRlNJ7xH0azp4UqDzrTLFR6g=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-siPcLIe5mjA+zhh0NoY6q3JXUG5b3TALK3yDdseIhDU=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-aIN+DXfIDnYrTphANXfNAiuOJogGLwDGgsQb4y+9qPI=' 'sha256-QePOpGGRS0mW0h03/ydC0fiqbaKzswj0nKh4zGx5pWQ=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-siPcLIe5mjA+zhh0NoY6q3JXUG5b3TALK3yDdseIhDU=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>DM Natação — Sistema de Atletas</title>
 <!-- 18/11/2026 (item c, domínio): endereço oficial e etiquetas de compartilhamento (Google, WhatsApp). Só texto, sem script: a CSP não muda. -->
@@ -2882,10 +2882,10 @@ function initAtletasView(){
       const tr = document.createElement('tr');
       if(r.recorde) tr.className = 'record';
       tr.innerHTML = `
-        <td><a class="rowlink" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
-        <td>${r.distancia}m ${r.estilo}</td><td>${fmtCat(r.categoria)}</td>
-        <td><b>${fmtTempo(r.tempo)}</b>${selo50(r)}${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
-        <td>${placeCell(r.colocacao)}</td><td>${r.data}</td><td>${r.competicao}</td><td>${fmt(r.it)}</td>`;
+        <td><a class="rowlink" href="#/atleta/${esc(ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta))}">${esc(displayName(r.atleta))}</a></td>
+        <td>${r.distancia}m ${esc(r.estilo)}</td><td>${esc(fmtCat(r.categoria))}</td>
+        <td><b>${fmtTempo(r.tempo)}</b>${selo50(r)}${r.recorde?`<span class="badge-rec" style="margin-left:6px">${esc(r.recorde)}</span>`:''}</td>
+        <td>${placeCell(r.colocacao)}</td><td>${esc(r.data)}</td><td>${esc(r.competicao)}</td><td>${fmt(r.it)}</td>`;
       tbody.appendChild(tr);
     });
     document.getElementById('resultcount').innerHTML = `<b>${filtered.length}</b> resultados · <b>${athleteNames.length}</b> atletas`;
@@ -3139,8 +3139,8 @@ function initAtletaHistSort(slug){
   const render = ()=>{
     const sorted = rows.slice().sort((a,b)=>cmp(accessor(a,sortState.key), accessor(b,sortState.key), sortState.dir));
     document.getElementById('hist-tbody').innerHTML = sorted.map(r=>`<tr class="${r.recorde?'record':''}">
-      <td>${r.data}</td><td>${r.competicao}</td><td>${r.distancia}m ${r.estilo}</td>
-      <td><b>${fmtTempo(r.tempo)}</b>${selo50(r)}${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
+      <td>${esc(r.data)}</td><td>${esc(r.competicao)}</td><td>${r.distancia}m ${esc(r.estilo)}</td>
+      <td><b>${fmtTempo(r.tempo)}</b>${selo50(r)}${r.recorde?`<span class="badge-rec" style="margin-left:6px">${esc(r.recorde)}</span>`:''}</td>
       <td>${placeCell(r.colocacao)}</td><td>${fmt(r.pontos)}</td><td>${fmt(r.it)}</td></tr>`).join('');
     updateSortIndicators(thead, sortState);
   };
@@ -3392,7 +3392,7 @@ function initRankingView(){
     const lista = resto.slice().sort((a,b)=>cmp(accessor(a,sortState.key), accessor(b,sortState.key), sortState.dir) || a.pos-b.pos);
     tbody.innerHTML = lista.map(r=>`<tr class="${r.atleta==='Diego Meza'?'diego-row':''}">
       <td>${placeCell(r.pos)}</td>
-      <td><a class="rowlink ${r.atleta==='Diego Meza'?'diego-name':''}" href="${href(r.atleta)}">${displayName(r.atleta)}</a></td>
+      <td><a class="rowlink ${r.atleta==='Diego Meza'?'diego-name':''}" href="${esc(href(r.atleta))}">${esc(displayName(r.atleta))}</a></td>
       <td>${r.ouro}</td><td>${r.prata}</td><td>${r.bronze}</td><td><b>${r.total}</b></td></tr>`).join('');
     updateSortIndicators(document.getElementById('r-thead'), sortState);
   };
@@ -3500,10 +3500,10 @@ function initResultadosView(){
     const start = (page-1)*PAGE_SIZE;
     const pageRows = rows.slice(start, start+PAGE_SIZE);
     document.getElementById('rs-tbody').innerHTML = pageRows.map(r=>`<tr class="${r.recorde?'record':''} ${r.atleta==='Diego Meza'?'diego-row':''}">
-      <td>${r.data}</td><td>${r.competicao}</td><td>${r.cidade||'—'}</td>
-      <td><a class="rowlink ${r.atleta==='Diego Meza'?'diego-name':''}" href="#/atleta/${ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta)}">${displayName(r.atleta)}</a></td>
-      <td>${fmtCat(r.categoria)}</td><td>${r.distancia}m ${r.estilo}</td>
-      <td><b>${fmtTempo(r.tempo)}</b>${selo50(r)}${r.recorde?`<span class="badge-rec" style="margin-left:6px">${r.recorde}</span>`:''}</td>
+      <td>${esc(r.data)}</td><td>${esc(r.competicao)}</td><td>${esc(r.cidade||'—')}</td>
+      <td><a class="rowlink ${r.atleta==='Diego Meza'?'diego-name':''}" href="#/atleta/${esc(ATHLETE_BY_NAME[r.atleta]?ATHLETE_BY_NAME[r.atleta].slug:slugify(r.atleta))}">${esc(displayName(r.atleta))}</a></td>
+      <td>${esc(fmtCat(r.categoria))}</td><td>${r.distancia}m ${esc(r.estilo)}</td>
+      <td><b>${fmtTempo(r.tempo)}</b>${selo50(r)}${r.recorde?`<span class="badge-rec" style="margin-left:6px">${esc(r.recorde)}</span>`:''}</td>
       <td>${placeCell(r.colocacao)}</td><td>${fmt(r.pontos)}</td><td>${fmt(r.it)}</td></tr>`).join('')
       || `<tr class="rs-vazio"><td colspan="10" style="text-align:center;color:var(--muted);padding:30px;">Nenhum resultado encontrado.</td></tr>`;
     updateSortIndicators(document.getElementById('rs-thead'), sortState);
