@@ -6,7 +6,7 @@
 <!-- 25/10/2026 (segurança): o GitHub Pages não deixa configurar cabeçalhos, então a regra de conteúdo vai aqui.
      Só carrega: scripts do próprio site e do cdnjs, estilos e fontes do próprio site, imagens do site (img/ e SVG embutido).
      Ao incluir algo de outro endereço (vídeo, mapa, contador de visitas), acrescentar o endereço na regra certa. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-aIN+DXfIDnYrTphANXfNAiuOJogGLwDGgsQb4y+9qPI=' 'sha256-QePOpGGRS0mW0h03/ydC0fiqbaKzswj0nKh4zGx5pWQ=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-siPcLIe5mjA+zhh0NoY6q3JXUG5b3TALK3yDdseIhDU=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-aIN+DXfIDnYrTphANXfNAiuOJogGLwDGgsQb4y+9qPI=' 'sha256-EuNhhiL1K705342+hY5Fb0EdpaElurJGAY4eb02hR0w=' 'sha256-kxt5HXpvy7yaMV6LEiWKhDzb4CSCjXBAQkrALxgWuoY=' 'sha256-siPcLIe5mjA+zhh0NoY6q3JXUG5b3TALK3yDdseIhDU=' 'sha256-IJK3ESw+f2f4Ir7hIJAAGKyyNeMJ/XZoek1dMMq56QE=' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>DM Natação — Sistema de Atletas</title>
 <!-- 18/11/2026 (item c, domínio): endereço oficial e etiquetas de compartilhamento (Google, WhatsApp). Só texto, sem script: a CSP não muda. -->
@@ -2848,11 +2848,11 @@ function initAtletasView(){
       const card = document.createElement('div');
       card.className = 'acard' + (isDiego ? ' acard-diego':'') + (activeAthlete===info.name ? ' active':'');
       const chips = info.filteredRows.slice(0,4).map(r=>
-        `<span class="eventchip ${r.recorde?'rec':''}">${r.distancia}m ${r.estilo} · ${fmtTempo(r.tempo)}${selo50(r)}${r.recorde?' 🏅':''}</span>`).join('');
+        `<span class="eventchip ${r.recorde?'rec':''}">${r.distancia}m ${esc(r.estilo)} · ${fmtTempo(r.tempo)}${selo50(r)}${r.recorde?' 🏅':''}</span>`).join('');
       card.innerHTML = `
         <div class="acard-top">
-          <div class="avatar"><span>${initials(displayName(info.name))}</span></div>
-          <div><div class="acard-name">${displayName(info.name)}</div><div class="acard-meta">${fmtCat(info.meta.categoria)} · ${info.meta.sexo==='F'?'Feminino':'Masculino'}</div></div>
+          <div class="avatar"><span>${esc(initials(displayName(info.name)))}</span></div>
+          <div><div class="acard-name">${esc(displayName(info.name))}</div><div class="acard-meta">${esc(fmtCat(info.meta.categoria))} · ${info.meta.sexo==='F'?'Feminino':'Masculino'}</div></div>
         </div>
         <div class="medals-row">${medalRow(info)}</div>
         <div class="eventchips">${chips}</div>`;
